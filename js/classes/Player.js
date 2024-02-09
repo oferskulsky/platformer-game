@@ -1,11 +1,15 @@
-class Player {
+class Player extends AnimatedSprite {
   constructor({ position, color, keys }) {
+    super({
+      position, 
+      imgSrc: `./img/${color}-player.png`,
+      frames: 1,
+      internalPosition: position
+    })
     this.dimentions = {
-      height: 75,
-      width: 75,
+      height: this.height,
+      width: this.width,
     };
-    this.position = position;
-    this.color = color;
     this.velocity = {
       speed: 4,
       jump: 6,
@@ -36,17 +40,6 @@ class Player {
     },
   };
 
-  draw() {
-    const canvas = document.querySelector("canvas");
-    c.fillStyle = this.color;
-    c.fillRect(
-      this.position.x,
-      this.position.y,
-      this.dimentions.width,
-      this.dimentions.height,
-    );
-  }
-
   update() {
     this.draw();
 
@@ -61,10 +54,10 @@ class Player {
 
     if (this.keys.down.pressed ) {
       this.position.y = (this.position.y + 25) > canvas.height - 50 ? canvas.height - 50 : this.position.y
-      this.dimentions.height = 50
+      this.dimentions.height = this.height /2
     } else {
       this.position.y = Math.min((this.position.y) , canvas.height - 75)
-      this.dimentions.height = 75
+      this.dimentions.height = this.height
     }
 
     this.position.y += this.velocity.y;

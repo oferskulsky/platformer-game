@@ -33,7 +33,7 @@ elements.push(
       up: 'i',
       down: 'k',
     }
-  })
+  }),
 )
 
 function animate() {
