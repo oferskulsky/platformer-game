@@ -61,12 +61,14 @@ class Player extends AnimatedSprite {
   }
 
   duck() {
+    this.image.src = this.image.src.replace('player.png', 'player-duck.png')
     this.position.y = (this.position.y + 25) > canvas.height - 50 ? canvas.height - 50 : this.position.y
     this.dimentions.height = this.height /2
   }
 
   unDuck() {
-    this.position.y = Math.min((this.position.y) , canvas.height - 75)
+    this.image.src = this.image.src.replace('player-duck.png', 'player.png')
+    this.position.y = Math.min((this.position.y) , canvas.height - this.image.height)
     this.dimentions.height = this.height
   }
 
