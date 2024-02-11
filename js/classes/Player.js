@@ -40,36 +40,73 @@ class Player extends AnimatedSprite {
     },
   };
 
-  update() {
-    this.draw();
-
+  calculateVelocityX() {
     this.velocity.x = this.keys.left.pressed
       ? -this.velocity.speed
       : this.keys.right.pressed
       ? this.velocity.speed
-      : 0;
-    if (this.keys.up.pressed && this.velocity.y == 0) {
-      this.velocity.y = -this.velocity.jump;
-    }
+      : 0; 
+  }
 
-    if (this.keys.down.pressed ) {
-      this.position.y = (this.position.y + 25) > canvas.height - 50 ? canvas.height - 50 : this.position.y
-      this.dimentions.height = this.height /2
-    } else {
-      this.position.y = Math.min((this.position.y) , canvas.height - 75)
-      this.dimentions.height = this.height
-    }
+  shouldJump() {
+    return this.keys.up.pressed && this.velocity.y == 0
+  }
 
+  jump() {
+    this.velocity.y = -this.velocity.jump;
+  }
+
+  shouldDuck() {
+    return this.keys.down.pressed
+  }
+
+  duck() {
+    this.position.y = (this.position.y + 25) > canvas.height - 50 ? canvas.height - 50 : this.position.y
+    this.dimentions.height = this.height /2
+  }
+
+  unDuck() {
+    this.position.y = Math.min((this.position.y) , canvas.height - 75)
+    this.dimentions.height = this.height
+  }
+
+  updatePosition() {
     this.position.y += this.velocity.y;
-    this.position.x = this.position.x + this.velocity.x;
+    this.position.x += this.velocity.x;
+  }
 
-    if (
-      this.position.y + this.dimentions.height + this.velocity.y <
-      canvas.height
-    ) {
-      this.velocity.y += gravity;
+  isFalling() {
+    return this.position.y + this.dimentions.height + this.velocity.y < canvas.height
+  }
+
+  fall() {
+    this.velocity.y += gravity;
+  }
+
+  unFall() {
+    this.velocity.y = 0;
+  }
+
+  update() {
+    this.draw();
+    this.calculateVelocityX()
+    
+    if (this.shouldJump()) {
+      this.jump();
+    }
+
+    if (this.shouldDuck()) {
+      this.duck()
     } else {
-      this.velocity.y = 0;
+      this.unDuck()
+    }
+
+    this.updatePosition()
+    
+    if (this.isFalling()) {
+      this.fall()
+    } else {
+      this.unFall()
     }
   }
 
