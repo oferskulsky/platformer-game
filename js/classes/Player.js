@@ -73,18 +73,26 @@ class Player extends AnimatedSprite {
   }
 
   findBlock() {
-    if (this.velocity.x !== 0) {
-      elements.forEach((other) => {
-        if (other !== this) {
-          const isLeftOfThis = other.position.x + other.width < this.position.x + this.velocity.x ;
-          const isRightOfThis = other.position.x > this.position.x + this.width + this.velocity.x ;
-          const isAboveThis = other.position.y + other.height < this.position.y + this.velocity.y ;
-          const isUnderThis = other.position.y > this.position.y + this.height + this.velocity.y ;
-          if (!isAboveThis && !isUnderThis && !isLeftOfThis && !isRightOfThis ) {
-            this.velocity.x = 0
+    if (this.velocity.x !== 0 || this.velocity.y !== 0) {
+      elements
+        .filter((element) => element !== this && isOverlapping(this, element))
+        .forEach((element) => {
+          let { horizontal, vertical } = isMovingOver(this, element);
+          if (horizontal) {
+            this.velocity.x = 0;
           }
-        }
-      });
+          if (vertical) {
+            this.velocity.y = 0;
+          }
+        });
+
+      // elements.forEach((other) => {
+      //   if (other !== this) {
+      //     if (isOverlapping(this, other)) {
+      //       this.velocity.x = 0
+      //     }
+      //   }
+      // });
     }
   }
 
@@ -110,7 +118,6 @@ class Player extends AnimatedSprite {
 
   update() {
     this.draw();
-    this.updatePosition();
     this.calculateVelocityX();
 
     if (this.shouldJump()) {
@@ -124,6 +131,7 @@ class Player extends AnimatedSprite {
     } else {
       this.unFall();
     }
+    this.updatePosition();
   }
 
   setState({ key, state }) {

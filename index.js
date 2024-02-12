@@ -23,7 +23,7 @@ elements.push(
   }),
   new Player({
     position: {
-      x: 100,
+      x: 500,
       y: 0,
     },
     color: "blue",
